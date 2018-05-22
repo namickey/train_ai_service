@@ -1,21 +1,22 @@
 # AI training
 How to learn AI Service develepment.
 
-* 1.導入　　
-* 2.サービスを使ってみる　　
-* 3.API解説　　
+# Contents
+1. ブラウザから使ってみる
+1. プログラムから使ってみる
 
-# 1.導入
-
-## 画像に何が映っているでしょうか？
-
+# ブラウザから使ってみる
+## 画像に映っているのは何？
+この画像はフルーツボールです。バナナ、青りんご、オレンジなど色々なフルーツが盛られています。  
+このように人が見て、画像に含まれるものを列挙することは、比較的簡単なことです。  
 ![fruitbowl.jpg](docs/img/fruitbowl.jpg)
 
-バナナ、青りんご、オレンジ、etc、、  
-人が見て、画像に含まれるものをあげるのは、比較的簡単です。　　
-
-## ヒトではなく、機械に画像を見せると、、、
+## では、ヒトではなく機械に画像が認識できるのか
+機械は、「モノの名前」と「スコア」で画像に何が映っているのかを認識する。  
+スコアが高いほどが一致率が高いことを示す。
 ```
+機械が認識した例
+
 モノの名前 ： スコア(%)
 
 規定食 (食品):0.579%
@@ -31,44 +32,105 @@ How to learn AI Service develepment.
 レモン・イエロー (色):0.898%
 ```
 
-モノの名前：
-スコア（％）：スコアが高いほどが一致率が高い
+## 実際にブラウザから画像認識サービスを呼び出す  
+以下のリンクは画像認識サービスAPIのリンクで、指定された画像URL（フルーツボール）より指定した画像を認識し、結果をJSONで返します。IBMクラウドが提供している画像認識APIを使用しています。  
 
-# 2.サービスを使ってみる
-
-## 画像認識サービスAPIのリンク
 https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&url=https://namickey.github.io/ai_train_2018/img/fruitbowl.jpg&version=2016-05-20
 
-## IBMクラウド
-上記の画像認識サービスは、IBMクラウドが提供している画像認識APIを使用しています。　　
-
-# 3.API解説
-
-## APIのパラメータ
+## 画像認識サービスAPIのパラメータ
+上記でクリックした画像認識サービスのURLを説明します。
 ```
 https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?
 api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&
 url=https://namickey.github.io/ai_train_2018/img/fruitbowl.jpg&
 version=2016-05-20
-
 ※読みやすいように改行を入れているので注意。
+
+* api_key：APIの利用に必要なキー。このキーは認証や回数集計や課金に利用される。  
+* url：任意の画像URL。ここで指定された画像の認識が行われる。  
+* version：指定された固定バージョンを入力する。  
 ```
 
-パラメータ  
-* api_key：APIの利用に必要なキー。  
-* url：任意の画像URL  
-* version：指定された固定バージョンを入力する。  
-
-## 任意の別の画像を指定する
-
+## 別画像のURLを指定する
 * 試してみたい画像URLをコピーする。  
   必ずインターネット上の画像URLであること。  
 * コピーした画像URLを、APIパラメータの２番目（url）と置き換える。  
 * ブラウザに完成したAPIのURLを入力する。  
 
-# Try　やってみよう
+例えば、ここに「チキン」の画像がある。  
+https://namickey.github.io/ai_train_2018/img/chicken.jpg
 
-* IBMクラウドの無料アカウントに登録する。　　
-  ※クレジットカード不要で、10日又は1ヶ月放置すると自動的にアカウント停止となる。　　
-* カタログから、画像認識サービスの申込みをする。　　
-* api_keyの発行を行う。　　
+この画像を使い画像認識サービスを呼び出すには、以下のURLのようになる。  
+https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&url=https://namickey.github.io/ai_train_2018/img/chicken.jpg&version=2016-05-20
+
+「チキン」の画像  
+![chicken.jpg](docs/img/chicken.jpg)
+
+
+
+## 【やってみよう】IBMクラウドの無料アカウント取得
+自分のアカウントのapi_keyを使って、画像認識サービスを呼び出してみよう。  
+* IBMクラウドの無料アカウントに登録する。  
+  ※クレジットカード不要  
+  ※10日又は1ヶ月放置すると自動的にアカウント停止となる。  
+* カタログから、画像認識サービスの申込みをする。  
+* 画像認識サービスで、api_keyの発行を行う。  
+* 発行されたapi_keyを使って、画像認識サービスを呼び出す。  
+
+# プログラムから使ってみる
+## curl実行
+```
+curl 'https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&url=https://namickey.github.io/ai_train_2018/img/chicken.jpg&version=2016-05-20'
+```
+
+## JAVA実行
+```
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
+
+public class JavaNetHttpClient {
+    public static void main(String[] args) {
+      try {
+          URL url = new URL("https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&url=https://namickey.github.io/ai_train_2018/img/chicken.jpg&version=2016-05-20");
+
+          HttpURLConnection connection = null;
+
+          try {
+              connection = (HttpURLConnection) url.openConnection();
+              connection.setRequestMethod("GET");
+
+              if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                  try (InputStreamReader isr = new InputStreamReader(connection.getInputStream(),
+                                                                     StandardCharsets.UTF_8);
+                       BufferedReader reader = new BufferedReader(isr)) {
+                      String line;
+                      while ((line = reader.readLine()) != null) {
+                          System.out.println(line);
+                      }
+                  }
+              }
+          } finally {
+              if (connection != null) {
+                  connection.disconnect();
+              }
+          }
+      } catch (IOException e) {
+          e.printStackTrace();
+      }
+    }
+}
+```
+## Python実行
+```
+import requests
+url='https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&url=https://namickey.github.io/ai_train_2018/img/chicken.jpg&version=2016-05-20'
+headers = {'Accept-Language': 'ja'}
+response = requests.get(url, headers=headers)
+print(response)
+```

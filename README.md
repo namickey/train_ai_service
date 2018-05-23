@@ -32,7 +32,7 @@ How to learn AI Service develepment.
 レモン・イエロー (色):0.898%
 ```
 
-## 実際にブラウザから画像認識サービスを呼び出す  
+## ブラウザから画像認識サービスを呼び出す  
 以下のリンクは画像認識サービスAPIのリンクで、指定された画像URL（フルーツボール）より指定した画像を認識し、結果をJSONで返します。IBMクラウドが提供している画像認識APIを使用しています。  
 
 https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&url=https://namickey.github.io/ai_train_2018/img/fruitbowl.jpg&version=2016-05-20
@@ -77,7 +77,7 @@ https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=
 * 画像認識サービスで、api_keyの発行を行う。  
 * 発行されたapi_keyを使って、画像認識サービスを呼び出す。  
 
-# プログラムから使ってみる
+# プログラムから画像認識サービスを呼び出す
 ## curl実行
 ```
 curl 'https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&url=https://namickey.github.io/ai_train_2018/img/chicken.jpg&version=2016-05-20'
@@ -86,46 +86,23 @@ curl 'https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?ap
 ## JAVA実行
 ```
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
 
-public class JavaNetHttpClient {
-    public static void main(String[] args) {
-      try {
-          URL url = new URL("https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&url=https://namickey.github.io/ai_train_2018/img/chicken.jpg&version=2016-05-20");
-
-          HttpURLConnection connection = null;
-
-          try {
-              connection = (HttpURLConnection) url.openConnection();
-              connection.setRequestMethod("GET");
-
-              if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                  try (InputStreamReader isr = new InputStreamReader(connection.getInputStream(),
-                                                                     StandardCharsets.UTF_8);
-                       BufferedReader reader = new BufferedReader(isr)) {
-                      String line;
-                      while ((line = reader.readLine()) != null) {
-                          System.out.println(line);
-                      }
-                  }
-              }
-          } finally {
-              if (connection != null) {
-                  connection.disconnect();
-              }
-          }
-      } catch (IOException e) {
-          e.printStackTrace();
-      }
+public class Sample {
+    public static void main(String[] args) throws IOException {
+        URL url = new URL("https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=befb491ae8c532e1db72518f6da8088bb2bd1b52&url=https://namickey.github.io/ai_train_2018/img/chicken.jpg&version=2016-05-20");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestProperty("Accept-Language", "ja");
+        try (BufferedReader reader = (con.getResponseCode() >= 400 ? new BufferedReader(new InputStreamReader(con.getErrorStream())) : new BufferedReader(new InputStreamReader(con.getInputStream())))) {
+            reader.lines().forEach(System.out::println);
+        }
     }
 }
 ```
+
 ## Python実行
 ```
 import requests
